@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         go-version: ['1.21.1']
-        arch: ['386'] #, 'amd64']
+        arch: ['386', 'amd64']
 
     steps:
     - name: Checkout code
@@ -23,6 +23,7 @@ jobs:
       if: matrix.arch == '386'
       run: choco install mingw --version 13.2.0 --x86 --force
     - name: Add MinGW to PATH
+      if: matrix.arch == '386'
       run: echo "C:\ProgramData\mingw64\mingw32\bin" | Out-File -Append -LiteralPath $env:GITHUB_PATH -Encoding utf8
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -30,22 +31,11 @@ jobs:
         go-version: ${{ matrix.go-version }}
         architecture: ${{ matrix.arch }}
 
-    - name: Build DLL (32-bit)
-      if: matrix.arch == '386'
-      run: go build -o jsonataxls-386.dll -buildmode=c-shared .
+    - name: Build DLL
+      run: go build -o jsonataxls-${{ matrix.arch }}.dll -buildmode=c-shared .
       env:
-        GOOS: windows
-        GOARCH: '386'
-        CC: i686-w64-mingw32-gcc
+        GOARCH: ${{ matrix.arch }}
         CGO_ENABLED: 1
-
-    - name: Build DLL (64-bit)
-      if: matrix.arch == 'amd64'
-      run: go build -o jsonataxls-amd64.dll -buildmode=c-shared .
-      env:
-        GOOS: windows
-        GOARCH: amd64
-        CC: x86_64-w64-mingw32-gcc
 
     - name: Upload DLL
       uses: actions/upload-artifact@v2

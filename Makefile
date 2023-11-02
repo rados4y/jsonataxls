@@ -4,7 +4,7 @@ all: clean build-32 build-64
 
 build-32:
 	@echo Building 32-bit DLL
-	CGO_ENABLED=1 GOOS=windows GOARCH=386 CC=i686-w64-mingw32-gcc go build -o jsonataxls-32.dll -buildmode=c-shared
+	CGO_ENABLED=1 GOOS=windows GOARCH=386 go build -o jsonataxls-32.dll -buildmode=c-shared
 
 build-64:
 	@echo Building 64-bit DLL
