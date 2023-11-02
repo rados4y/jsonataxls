@@ -17,7 +17,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Install MinGW
+      if: matrix.arch == 'amd64'
       run: choco install mingw --version 13.2.0 --force
+    - name: Install MinGW
+      if: matrix.arch == '386'
+      run: choco install mingw --version 13.2.0 --x86 --force
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
