@@ -1,0 +1,1 @@
+go build -o jsonataxls.dll -buildmode=c-shared main.go
