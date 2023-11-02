@@ -1,0 +1,36 @@
+name: Build DLL
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        go-version: ['1.17.x']
+        arch: ['386', 'amd64']
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install MinGW
+      run: choco install mingw --version 13.2.0 --force
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{ matrix.go-version }}
+
+    - name: Build DLL (64-bit or 32-bit)
+      run: |
+        $env:GOARCH = "${{ matrix.arch }}"
+        go build -o jsonataxls-${{ matrix.arch }}.dll -buildmode=c-shared .
+      shell: pwsh
+
+    - name: Upload DLL
+      uses: actions/upload-artifact@v2
+      with:
+        name: jsonataxls-${{ matrix.arch }}.dll
+        path: jsonataxls-${{ matrix.arch }}.dll
