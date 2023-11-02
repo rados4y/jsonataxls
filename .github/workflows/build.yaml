@@ -10,7 +10,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        go-version: ['1.17.x']
+        go-version: ['1.21.1']
         arch: ['386', 'amd64']
 
     steps:
