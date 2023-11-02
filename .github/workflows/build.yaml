@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         go-version: ['1.21.1']
-        arch: ['386', 'amd64']
+        arch: ['386'] #, 'amd64']
 
     steps:
     - name: Checkout code
@@ -28,11 +28,22 @@ jobs:
         go-version: ${{ matrix.go-version }}
         architecture: ${{ matrix.arch }}
 
-    - name: Build DLL (64-bit or 32-bit)
-      run: |
-        $env:GOARCH = "${{ matrix.arch }}"
-        go build -o jsonataxls-${{ matrix.arch }}.dll -buildmode=c-shared .
-      shell: pwsh
+    - name: Build DLL (32-bit)
+      if: matrix.arch == '386'
+      run: go build -o jsonataxls-386.dll -buildmode=c-shared .
+      env:
+        GOOS: windows
+        GOARCH: '386'
+        CC: i686-w64-mingw32-gcc
+        CGO_ENABLED: 1
+
+    - name: Build DLL (64-bit)
+      if: matrix.arch == 'amd64'
+      run: go build -o jsonataxls-amd64.dll -buildmode=c-shared .
+      env:
+        GOOS: windows
+        GOARCH: amd64
+        CC: x86_64-w64-mingw32-gcc
 
     - name: Upload DLL
       uses: actions/upload-artifact@v2
