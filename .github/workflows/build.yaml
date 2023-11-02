@@ -19,9 +19,10 @@ jobs:
     - name: Install MinGW
       run: choco install mingw --version 13.2.0 --force
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v4
       with:
         go-version: ${{ matrix.go-version }}
+        architecture: ${{ matrix.arch }}
 
     - name: Build DLL (64-bit or 32-bit)
       run: |
