@@ -23,7 +23,7 @@ jobs:
       if: matrix.arch == '386'
       run: choco install mingw --version 13.2.0 --x86 --force
     - name: Add MinGW to PATH
-      run: echo "C:\ProgramData\mingw64\mingw64\bin" | Out-File -Append -LiteralPath $env:GITHUB_PATH -Encoding utf8
+      run: echo "C:\ProgramData\mingw64\mingw32\bin" | Out-File -Append -LiteralPath $env:GITHUB_PATH -Encoding utf8
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
